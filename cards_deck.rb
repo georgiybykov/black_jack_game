@@ -19,10 +19,10 @@ class CardsDeck
   private
 
   def cards_deck_generate
-    @cards_deck = []
+    cards_deck = []
     Card::SUITS.each do |suit|
       cards_deck.concat(Card::RANKS.map { |value| Card.new(suit, value) })
     end
-    @cards_deck
+    cards_deck
   end
 end

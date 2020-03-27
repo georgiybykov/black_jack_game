@@ -9,10 +9,9 @@ class CardsDeck
 
   def shuffle!
     @cards_deck.shuffle!
-    nil
   end
 
-  def pop!
+  def take_a_card
     @cards_deck.pop
   end
 

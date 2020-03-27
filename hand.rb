@@ -9,7 +9,7 @@ class Hand
     @cards = []
   end
 
-  def <<(card)
+  def add_card(card)
     if card.value == 'Ace'
       @cards << card
     else
@@ -18,11 +18,11 @@ class Hand
     @cards
   end
 
-  def show
+  def show_cards
     @cards.map(&:show)
   end
 
-  def score
+  def hand_points
     # reduce() is alias method to inject()
     @cards.reduce(0) do |sum, card|
       scr = if %w[Jack Queen King].include?(card.value)

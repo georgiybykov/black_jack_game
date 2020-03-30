@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'card'
-require_relative 'cards_deck'
 require_relative 'hand'
 
 class Player
-  attr_reader :hand, :bank_account
+  attr_reader :name, :hand, :bank_account
 
   def initialize(name)
     @name = name
@@ -30,7 +28,7 @@ class Player
     end
   end
 
-  def show_cards(choise = :hidden)
+  def show_hand_cards(choise = :hidden)
     case choise
     when :hidden
       hidden_cards
@@ -39,11 +37,11 @@ class Player
     end
   end
 
-  def make_a_bet(value)
-    raise 'You do not have money to make a bet' unless value <= @bank_account
+  # def make_a_bet(value)
+  #   raise 'You do not have money to make a bet' unless value <= @bank_account
 
-    @bank_account -= value
-  end
+  #   @bank_account -= value
+  # end
 
   def take_money(value)
     @bank_account += value
@@ -52,14 +50,4 @@ class Player
   def points
     @hand.hand_points
   end
-
-  # private
-
-  # def hidden_hand_points
-  #   @hand.hand_points
-  # end
-
-  # def hidden_cards
-  #   @hand.show_cards
-  # end
 end

@@ -12,62 +12,76 @@ class Game
     @dealer = Dealer.new
     @game_bank = 0
     @deck = CardsDeck.new
-    @deck.shuffle! # ADD MORE SHUFFLE TO CARDS DECK    !!!
-    @playing = false
+    @deck.shuffle!
   end
 
   def start_game
-    take_start_cards
-    player_hand_info
-    dealer_hand_info(:hidden)
-    puts "Game bank: #{@game_bank = BET_SIZE * 2} $"
+    first_deal_of_cards
+
+    if @player.points == 21
+      puts 'Black Jack!'
+      game_results
+    else
+      game_info(:hidden)
+      puts "Game bank: #{@game_bank = BET_SIZE * 2} $"
+      player_step
+    end
   end
 
   private
 
-  def take_start_cards
+  def first_deal_of_cards
     2.times do
       @player.hand.add_card(@deck.take_a_card)
       @dealer.hand.add_card(@deck.take_a_card)
     end
   end
 
-  def player_hand_info
+  def game_info(choise)
     puts %(
-      Player hand: #{@player.show_cards(:open)}
-      Points: #{@player.show_hand_points(:open)}
+      Player hand: #{@player.hand.show_cards}
+      Points: #{@player.points}
       Player bank account: #{@player.bank_account - BET_SIZE} $
     )
-  end
-
-  def dealer_hand_info(choise)
     puts %(
-      Dealer hand: #{@dealer.show_cards(choise)}
+      Dealer hand: #{@dealer.show_hand_cards(choise)}
       Points: #{@dealer.show_hand_points(choise)}
       Dealer bank account: #{@dealer.bank_account - BET_SIZE} $
     )
   end
 
-  def player_step(action = nil)
-    case action
-    when :skip_step
-      dealer_step
-    when :add_card
-      @player.hand.add_card(@deck.take_a_card) if @player.hand.cards.size < 3
-      dealer_step
-    when :open_cards
-      player_hand_info
-      dealer_hand_info(:open)
-      game_results
+  def player_step
+    puts %(
+      Type number to make a step:
+        1. Skip step
+        2. Add card
+        3. Open cards
+    )
+    loop do
+      action = gets.chomp.to_i
+      case action
+      when 1
+        game_info(:hidden)
+        dealer_step
+        break
+      when 2
+        @player.hand.add_card(@deck.take_a_card) if @player.hand.cards.size < 3
+        game_info(:hidden)
+        dealer_step
+        break
+      when 3
+        game_info(:open)
+        game_results
+      end
     end
   end
 
   def dealer_step
     if @dealer.points >= 17
-      palyer_step
+      player_step
     elsif @dealer.points < 17 && @dealer.hand.cards.size < 3
       @dealer.hand.add_card(@deck.take_a_card)
-      palyer_step
+      player_step
     end
   end
 
@@ -88,6 +102,7 @@ class Game
     puts "Winner is #{player.name}"
     player.take_money(@game_bank)
     @game_bank = 0
+    puts "Winner bank account is #{player.bank_account} $"
   end
 
   def standoff

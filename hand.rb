@@ -28,7 +28,7 @@ class Hand
       scr = if %w[Jack Queen King].include?(card.value)
               10
             elsif card.value == 'Ace'
-              sum + 11 >= 21 ? 1 : 11
+              sum + 11 > 21 ? 1 : 11
             else
               card.value
             end

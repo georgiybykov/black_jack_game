@@ -26,7 +26,7 @@ class Player
     when :hidden
       hidden_hand_points
     when :open
-      @hand.hand_points
+      points
     end
   end
 
@@ -49,13 +49,17 @@ class Player
     @bank_account += value
   end
 
-  private
-
-  def hidden_hand_points
+  def points
     @hand.hand_points
   end
 
-  def hidden_cards
-    @hand.show_cards
-  end
+  # private
+
+  # def hidden_hand_points
+  #   @hand.hand_points
+  # end
+
+  # def hidden_cards
+  #   @hand.show_cards
+  # end
 end

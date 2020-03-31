@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# require_relative 'game'
 require_relative 'hand'
 
 class Player
@@ -12,13 +11,23 @@ class Player
     @bank_account = 100
   end
 
-  # def get_card(card)
-  #   @hand.add_card(card)
-  # end
+  def reset_hand
+    @hand = Hand.new
+  end
 
-  # def reset_hand
-  #   @hand = Hand.new
-  # end
+  def draw_card(card)
+    @hand.add_card(card)
+  end
+
+  def make_a_bet(value)
+    raise 'You do not have money to make a bet' unless value <= @bank_account
+
+    @bank_account -= value
+  end
+
+  def get_money(value)
+    @bank_account += value
+  end
 
   def show_hand_points(choise = :hidden)
     case choise
@@ -38,17 +47,11 @@ class Player
     end
   end
 
-  def bet(value)
-    raise 'You do not have money to make a bet' unless value <= @bank_account
-
-    @bank_account -= value
-  end
-
-  def take_money(value)
-    @bank_account += value
-  end
-
   def points
     @hand.hand_points
+  end
+
+  def cards_count
+    @hand.cards.size
   end
 end

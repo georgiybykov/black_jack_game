@@ -1,4 +1,6 @@
-require 'pry'
+# frozen_string_literal: true
+
+# require 'pry'
 require_relative 'cards_deck'
 require_relative 'hand'
 require_relative 'player'
@@ -7,14 +9,17 @@ require_relative 'dealer'
 class Game
   BET_SIZE = 10
 
+  ACTIONS = {
+    skip_step: 1,
+    add_card: 2,
+    open_cards: 3
+  }.freeze
+
   def initialize(player, dealer)
     @player = player
     @dealer = dealer
-    @player.bet(BET_SIZE)
-    @dealer.bet(BET_SIZE)
-    @game_bank = BET_SIZE * 2
-    @deck = CardsDeck.new
-    @deck.shuffle!
+    bets
+    reset_cards_deck
   end
 
   def start_game
@@ -24,20 +29,32 @@ class Game
     if @player.points == 21
       puts 'Black Jack!'
       game_info(:open)
-      game_results
     else
       game_info(:hidden)
       player_step
-      game_results
     end
+    game_results
   end
 
   private
 
+  def reset_cards_deck
+    @player.reset_hand
+    @dealer.reset_hand
+    @deck = CardsDeck.new
+    @deck.shuffle!
+  end
+
+  def bets
+    @player.make_a_bet(BET_SIZE)
+    @dealer.make_a_bet(BET_SIZE)
+    @game_bank = BET_SIZE * 2
+  end
+
   def first_deal_of_cards
     2.times do
-      @player.hand.add_card(@deck.take_a_card)
-      @dealer.hand.add_card(@deck.take_a_card)
+      @player.draw_card(@deck.take_a_card)
+      @dealer.draw_card(@deck.take_a_card)
     end
   end
 
@@ -64,20 +81,24 @@ class Game
     loop do
       action = gets.chomp.to_i
       case action
-      when 1
+      when ACTIONS[:skip_step]
+        return ACTIONS[:open_cards] if @player.cards_count == 3
+
         game_info(:hidden)
         dealer_step
         break
-      when 2
-        @player.hand.add_card(@deck.take_a_card) if @player.hand.cards.size < 3
+      when ACTIONS[:add_card]
+        return ACTIONS[:open_cards] unless @player.cards_count < 3
+
+        @player.hand.add_card(@deck.take_a_card)
         game_info(:hidden)
         dealer_step
         break
-      when 3
+      when ACTIONS[:open_cards]
         game_info(:open)
         break
       else
-        puts 'It is a mistake. Type step number again!'
+        puts 'It is a mistake. Type right step number!'
       end
     end
   end
@@ -85,8 +106,8 @@ class Game
   def dealer_step
     if @dealer.points >= 17
       player_step
-    elsif @dealer.points < 17 && @dealer.hand.cards.size < 3
-      @dealer.hand.add_card(@deck.take_a_card)
+    elsif @dealer.points < 17 && @dealer.cards_count < 3
+      @dealer.draw_card(@deck.take_a_card)
       player_step
     end
   end
@@ -104,17 +125,17 @@ class Game
   end
 
   def winner(player)
-    puts 'Standoff!' if player.nil?
+    puts 'It is a tie!' if player.nil?
     puts "Winner is #{player.name}"
-    player.take_money(@game_bank)
+    player.get_money(@game_bank)
     @game_bank = 0
     puts "Winner bank account is #{player.bank_account} $"
   end
 
   def tie
     puts "It is a tie between #{@player.name} and #{@dealer.name}!"
-    @player.take_money(BET_SIZE)
-    @dealer.take_money(BET_SIZE)
+    @player.get_money(BET_SIZE)
+    @dealer.get_money(BET_SIZE)
     @game_bank = 0
     puts "#{@player.name} bank account is #{@player.bank_account} $"
     puts "#{@dealer.name} bank account is #{@dealer.bank_account} $"

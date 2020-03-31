@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
+require_relative 'lib/interface'
 require_relative 'lib/game'
 require_relative 'lib/player'
 require_relative 'lib/dealer'
 
-puts 'What is your name?'
-name = gets.chomp.capitalize
-puts "You are welcome to our Black Jack game, #{name}!"
+@interface = Interface.new
 
-player = Player.new(name)
+@interface.greeting!
+
+player = Player.new(@interface.name)
 dealer = Dealer.new
 
 loop do
@@ -20,10 +21,6 @@ loop do
     break
   end
   Game.new(player, dealer).start_game
-  puts %(
-    Would you like to continue playing?
-    Type: any button - 'yes' OR n - 'no'
-  )
-  choise = gets.chomp.to_s.downcase
+  choise = @interface.continue_playing?
   break if choise == 'n'
 end

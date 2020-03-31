@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'game'
-require_relative 'player'
-require_relative 'dealer'
+require_relative 'lib/game'
+require_relative 'lib/player'
+require_relative 'lib/dealer'
 
 puts 'What is your name?'
 name = gets.chomp.capitalize

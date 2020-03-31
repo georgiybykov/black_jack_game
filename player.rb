@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# require_relative 'game'
 require_relative 'hand'
 
 class Player
@@ -37,11 +38,11 @@ class Player
     end
   end
 
-  # def make_a_bet(value)
-  #   raise 'You do not have money to make a bet' unless value <= @bank_account
+  def bet(value)
+    raise 'You do not have money to make a bet' unless value <= @bank_account
 
-  #   @bank_account -= value
-  # end
+    @bank_account -= value
+  end
 
   def take_money(value)
     @bank_account += value

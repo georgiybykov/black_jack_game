@@ -1,4 +1,4 @@
-require_relative 'card'
+require 'pry'
 require_relative 'cards_deck'
 require_relative 'hand'
 require_relative 'player'
@@ -7,24 +7,28 @@ require_relative 'dealer'
 class Game
   BET_SIZE = 10
 
-  def initialize(player)
-    @player = Player.new(player)
-    @dealer = Dealer.new
-    @game_bank = 0
+  def initialize(player, dealer)
+    @player = player
+    @dealer = dealer
+    @player.bet(BET_SIZE)
+    @dealer.bet(BET_SIZE)
+    @game_bank = BET_SIZE * 2
     @deck = CardsDeck.new
     @deck.shuffle!
   end
 
   def start_game
     first_deal_of_cards
+    puts "Game bank: #{@game_bank} $"
 
     if @player.points == 21
       puts 'Black Jack!'
+      game_info(:open)
       game_results
     else
       game_info(:hidden)
-      puts "Game bank: #{@game_bank = BET_SIZE * 2} $"
       player_step
+      game_results
     end
   end
 
@@ -39,14 +43,14 @@ class Game
 
   def game_info(choise)
     puts %(
-      Player hand: #{@player.hand.show_cards}
+      #{@player.name}'s hand: #{@player.hand.show_cards}
       Points: #{@player.points}
-      Player bank account: #{@player.bank_account - BET_SIZE} $
+      #{@player.name}'s bank account: #{@player.bank_account} $
     )
     puts %(
       Dealer hand: #{@dealer.show_hand_cards(choise)}
       Points: #{@dealer.show_hand_points(choise)}
-      Dealer bank account: #{@dealer.bank_account - BET_SIZE} $
+      Dealer bank account: #{@dealer.bank_account} $
     )
   end
 
@@ -71,7 +75,9 @@ class Game
         break
       when 3
         game_info(:open)
-        game_results
+        break
+      else
+        puts 'It is a mistake. Type step number again!'
       end
     end
   end
@@ -87,7 +93,7 @@ class Game
 
   def game_results
     if (@player.points > 21 && @dealer.points > 21) || @player.points == @dealer.points
-      standoff
+      tie
     elsif @player.points > 21
       winner(@dealer)
     elsif @dealer.points > 21 || @player.points > @dealer.points
@@ -105,9 +111,12 @@ class Game
     puts "Winner bank account is #{player.bank_account} $"
   end
 
-  def standoff
+  def tie
+    puts "It is a tie between #{@player.name} and #{@dealer.name}!"
     @player.take_money(BET_SIZE)
     @dealer.take_money(BET_SIZE)
     @game_bank = 0
+    puts "#{@player.name} bank account is #{@player.bank_account} $"
+    puts "#{@dealer.name} bank account is #{@dealer.bank_account} $"
   end
 end

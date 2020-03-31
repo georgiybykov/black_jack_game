@@ -4,7 +4,7 @@ require_relative 'card'
 
 class CardsDeck
   def initialize
-    @cards_deck = Array.new(self.class.cards_deck_generate)
+    @cards_deck = cards_deck_generate
   end
 
   def shuffle!
@@ -17,13 +17,11 @@ class CardsDeck
 
   private
 
-  def self.cards_deck_generate
-    @cards_deck ||= begin
-      cards_deck = []
-      Card::SUITS.each do |suit|
-        Card::RANKS.each { |value| cards_deck << Card.new(value, suit) }
-      end
-      cards_deck
+  def cards_deck_generate
+    cards_deck = []
+    Card::SUITS.each do |suit|
+      Card::RANKS.each { |value| cards_deck << Card.new(value, suit) }
     end
+    cards_deck
   end
 end

@@ -5,6 +5,7 @@ AllCops:
     - '**/*.rb'
   Exclude:
     - 'README.md'
+
 Style/FrozenStringLiteralComment:
   Enabled: true
 

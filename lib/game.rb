@@ -16,24 +16,23 @@ class Game
     open_cards: 3
   }.freeze
 
-  def initialize(player, dealer)
+  def initialize
     @interface = Interface.new
-    @player = player
-    @dealer = dealer
+    @player = Player.new(@interface.greeting)
+    @dealer = Dealer.new
     bets
     reset_cards_deck
-
   end
 
   def start_game
     first_deal_of_cards
-    puts "Game bank: #{@game_bank} $"
+    @interface.show_game_bank(@game_bank)
 
     if @player.points == 21
-      puts 'Black Jack!'
-      game_info(:open)
+      @interface.black_jack?
+      @interface.show_game_info(@player, @dealer, :open)
     else
-      game_info(:hidden)
+      @interface.show_game_info(@player, @dealer, :hidden)
       player_step
     end
     game_results
@@ -41,17 +40,17 @@ class Game
 
   private
 
+  def bets
+    @player.make_a_bet(BET_SIZE)
+    @dealer.make_a_bet(BET_SIZE)
+    @game_bank = BET_SIZE * 2
+  end
+
   def reset_cards_deck
     @player.reset_hand
     @dealer.reset_hand
     @deck = CardsDeck.new
     @deck.shuffle!
-  end
-
-  def bets
-    @player.make_a_bet(BET_SIZE)
-    @dealer.make_a_bet(BET_SIZE)
-    @game_bank = BET_SIZE * 2
   end
 
   def first_deal_of_cards
@@ -61,47 +60,29 @@ class Game
     end
   end
 
-  def game_info(choise)
-    puts %(
-      #{@player.name}'s hand: #{@player.hand.show_cards}
-      Points: #{@player.points}
-      #{@player.name}'s bank account: #{@player.bank_account} $
-    )
-    puts %(
-      Dealer hand: #{@dealer.show_hand_cards(choise)}
-      Points: #{@dealer.show_hand_points(choise)}
-      Dealer bank account: #{@dealer.bank_account} $
-    )
-  end
-
   def player_step
-    puts %(
-      Type number to make a step:
-        1. Skip step
-        2. Add card
-        3. Open cards
-    )
+    @interface.player_step_menu
     loop do
       action = gets.chomp.to_i
       case action
       when ACTIONS[:skip_step]
         return ACTIONS[:open_cards] if @player.cards_count == 3
 
-        game_info(:hidden)
+        @interface.show_game_info(@player, @dealer, :hidden)
         dealer_step
         break
       when ACTIONS[:add_card]
         return ACTIONS[:open_cards] unless @player.cards_count < 3
 
         @player.hand.add_card(@deck.take_a_card)
-        game_info(:hidden)
+        @interface.show_game_info(@player, @dealer, :hidden)
         dealer_step
         break
       when ACTIONS[:open_cards]
-        game_info(:open)
+        @interface.show_game_info(@player, @dealer, :open)
         break
       else
-        puts 'It is a mistake. Type right step number!'
+        @interface.not_right_step?
       end
     end
   end
@@ -128,19 +109,15 @@ class Game
   end
 
   def winner(player)
-    puts 'It is a tie!' if player.nil?
-    puts "Winner is #{player.name}"
     player.get_money(@game_bank)
     @game_bank = 0
-    puts "Winner bank account is #{player.bank_account} $"
+    @interface.show_winner(player)
   end
 
   def tie
-    puts "It is a tie between #{@player.name} and #{@dealer.name}!"
     @player.get_money(BET_SIZE)
     @dealer.get_money(BET_SIZE)
     @game_bank = 0
-    puts "#{@player.name} bank account is #{@player.bank_account} $"
-    puts "#{@dealer.name} bank account is #{@dealer.bank_account} $"
+    @interface.show_tie(@player, @dealer)
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 class Interface
   def greeting
@@ -9,20 +10,10 @@ class Interface
   def continue_playing?
     puts %(
     Would you like to continue playing?
-    Type: any button - 'yes' OR n - 'no'
+    Type: y - 'yes' OR n - 'no'
     )
-    gets.chomp.to_s.downcase
+    true if gets.chomp.to_s.downcase == 'y'
   end
-
-  # def enough_money?
-  #   if player.bank_account.zero?
-  #     puts 'You do not have enough money to play!'
-  #     break
-  #   elsif dealer.bank_account.zero?
-  #     puts 'Dealer does not have enough money to play!'
-  #     break
-  #   end
-  # end
 
   def show_game_info(player, dealer, choise)
     puts %(

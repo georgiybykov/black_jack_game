@@ -20,7 +20,7 @@ class Player
   end
 
   def make_a_bet(value)
-    raise 'You do not have money to make a bet' unless value <= @bank_account
+    raise RuntimeError unless value <= @bank_account
 
     @bank_account -= value
   end

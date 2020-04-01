@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# require 'pry'
 require_relative 'interface'
 require_relative 'cards_deck'
 require_relative 'hand'
@@ -20,7 +19,6 @@ class Game
     @interface = Interface.new
     @player = Player.new(@interface.greeting)
     @dealer = Dealer.new
-    bets
     reset_cards_deck
   end
 
@@ -38,9 +36,7 @@ class Game
     game_results
   end
 
-  private
-
-  def bets
+  def players_bets
     @player.make_a_bet(BET_SIZE)
     @dealer.make_a_bet(BET_SIZE)
     @game_bank = BET_SIZE * 2
@@ -52,6 +48,12 @@ class Game
     @deck = CardsDeck.new
     @deck.shuffle!
   end
+
+  def continue_playing?
+    @interface.continue_playing?
+  end
+
+  private
 
   def first_deal_of_cards
     2.times do

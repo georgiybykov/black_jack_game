@@ -10,7 +10,7 @@ loop do
     game.players_bets
     game.start_game
     break unless game.continue_playing?
-  rescue RuntimeError => e
+  rescue PlayerDoesntHaveMoney, DealerDoesntHaveMoney  => e
     puts e.message
     break
   end

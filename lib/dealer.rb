@@ -8,6 +8,12 @@ class Dealer < Player
     super
   end
 
+  def make_a_bet(value)
+    raise DealerDoesntHaveMoney unless value <= @bank_account
+
+    @bank_account -= value
+  end
+
   private
 
   def hidden_hand_points

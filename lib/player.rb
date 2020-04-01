@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'exception'
 require_relative 'hand'
 
 class Player
@@ -20,7 +21,7 @@ class Player
   end
 
   def make_a_bet(value)
-    raise RuntimeError unless value <= @bank_account
+    raise PlayerDoesntHaveMoney unless value <= @bank_account
 
     @bank_account -= value
   end

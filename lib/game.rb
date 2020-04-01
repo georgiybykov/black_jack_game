@@ -22,7 +22,23 @@ class Game
     reset_cards_deck
   end
 
-  def start_game
+  def play_game
+    loop do
+      begin
+        reset_cards_deck
+        players_bets
+        start_game_set
+        break unless continue_playing?
+      rescue PlayerDoesntHaveMoney, DealerDoesntHaveMoney => e
+        @interface.error?(e)
+        break
+      end
+    end
+  end
+
+  private
+
+  def start_game_set
     first_deal_of_cards
     @interface.show_game_bank(@game_bank)
 
@@ -52,8 +68,6 @@ class Game
   def continue_playing?
     @interface.continue_playing?
   end
-
-  private
 
   def first_deal_of_cards
     2.times do

@@ -60,4 +60,8 @@ class Interface
   def not_right_step?
     puts 'It is a mistake. Type right step number!'
   end
+
+  def error?(e)
+    puts e.message
+  end
 end

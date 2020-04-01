@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'exception'
+require_relative 'exceptions'
 require_relative 'hand'
 
 class Player

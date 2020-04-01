@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlayerDoesntHaveMoney < RuntimeError
   def message
     'You do not have enough money to play!'

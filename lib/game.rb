@@ -8,7 +8,7 @@ require_relative 'player'
 require_relative 'dealer'
 
 class Game
-  BET_SIZE = 10
+  BET_SIZE = 10.freeze
 
   ACTIONS = {
     skip_step: 1,

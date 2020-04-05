@@ -35,6 +35,7 @@ class Game
         break
       end
     end
+    game_winner
   end
 
   private
@@ -117,18 +118,18 @@ class Game
     if (@player.points > 21 && @dealer.points > 21) || @player.points == @dealer.points
       tie
     elsif @player.points > 21
-      winner(@dealer)
+      round_winner(@dealer)
     elsif @dealer.points > 21 || @player.points > @dealer.points
-      winner(@player)
+      round_winner(@player)
     else
-      winner(@dealer)
+      round_winner(@dealer)
     end
   end
 
-  def winner(player)
+  def round_winner(player)
     player.get_money(@game_bank)
     @game_bank = 0
-    @interface.show_winner(player)
+    @interface.show_round_winner(player)
   end
 
   def tie
@@ -136,5 +137,16 @@ class Game
     @dealer.get_money(BET_SIZE)
     @game_bank = 0
     @interface.show_tie(@player, @dealer)
+  end
+
+  def game_winner
+    winner = if @player.bank_account > @dealer.bank_account
+                @player
+              elsif @player.bank_account < @dealer.bank_account
+                @dealer
+              else
+                nil
+              end
+    @interface.show_game_winner(winner)
   end
 end

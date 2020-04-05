@@ -22,22 +22,22 @@ class Interface
       #{player.name}'s bank account: #{player.bank_account} $
     )
     puts %(
-      Dealer hand: #{dealer.show_hand_cards(choise)}
+      Dealer's hand: #{dealer.show_hand_cards(choise)}
       Points: #{dealer.show_hand_points(choise)}
-      Dealer bank account: #{dealer.bank_account} $
+      Dealer's bank account: #{dealer.bank_account} $
     )
   end
 
   def player_step_menu
     puts %(
-      Type number to make a step:
+      Type a number to make the next step:
         1. Skip step
         2. Add card
         3. Open cards
     )
   end
 
-  def show_winner(player)
+  def show_round_winner(player)
     puts 'It is a tie!' if player.nil?
     puts "Winner is #{player.name}"
     puts "Winner bank account is #{player.bank_account} $"
@@ -47,6 +47,14 @@ class Interface
     puts "It is a tie between #{player.name} and #{dealer.name}!"
     puts "#{player.name} bank account is #{player.bank_account} $"
     puts "#{dealer.name} bank account is #{dealer.bank_account} $"
+  end
+
+  def show_game_winner(player)
+    if player.nil?
+      puts 'It is a tie!'
+    else
+      puts "The game is over! The winner is #{player.name} with #{player.bank_account} $."
+    end
   end
 
   def show_game_bank(game_bank)

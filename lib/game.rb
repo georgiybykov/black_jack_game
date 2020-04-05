@@ -129,6 +129,7 @@ class Game
   def round_winner(player)
     player.get_money(@game_bank)
     @game_bank = 0
+    @interface.black_jack? if player.points == 21
     @interface.show_round_winner(player)
   end
 

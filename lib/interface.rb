@@ -31,16 +31,19 @@ class Interface
   def player_step_menu
     puts %(
       Type a number to make the next step:
-        1. Skip step
-        2. Add card
+        1. Skip a step
+        2. Add a card
         3. Open cards
     )
   end
 
   def show_round_winner(player)
-    puts 'It is a tie!' if player.nil?
-    puts "Winner is #{player.name}"
-    puts "Winner bank account is #{player.bank_account} $"
+    if player.nil?
+      puts 'It is a tie!'
+    else
+      puts "The winner is #{player.name}"
+      puts "#{player.name}'s bank account is #{player.bank_account} $"
+    end
   end
 
   def show_tie(player, dealer)
@@ -58,7 +61,7 @@ class Interface
   end
 
   def show_game_bank(game_bank)
-    puts "Game bank: #{game_bank} $"
+    puts "The game bank is: #{game_bank} $"
   end
 
   def black_jack?
@@ -66,7 +69,7 @@ class Interface
   end
 
   def not_right_step?
-    puts 'It is a mistake. Type right step number!'
+    puts 'It is a mistake. Type a right number of the step!'
   end
 
   def error?(e)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MyExceptionsLibrary
-  class NoMoneyError < StandardError
+  class NoMoneyError < ::StandardError
   end
 
   class PlayerNoMoneyError < NoMoneyError

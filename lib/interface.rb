@@ -35,6 +35,8 @@ class Interface
         2. Add a card
         3. Open cards
     )
+    print 'Your turn: '
+    gets.chomp.to_i
   end
 
   def show_round_winner(player)

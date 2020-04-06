@@ -79,9 +79,8 @@ class Game
   end
 
   def player_step
-    @interface.player_step_menu
     loop do
-      action = gets.chomp.to_i
+      action = @interface.player_step_menu
       case action
       when ACTIONS[:skip_step]
         return ACTIONS[:open_cards] if @player.cards_count == 3

@@ -29,6 +29,8 @@ Then type your name and press < Enter > button. It will start the game round.
             2. Add a card
             3. Open cards
 
+          Your turn: < your_step_number >
+
 First line gives you the information about game bank. It consists of player's and dealer's bets.
 
 The following two areas show the player's or dealer's hand, amount of points in a hand and balance of bank account.

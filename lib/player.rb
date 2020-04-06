@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'exceptions'
+require_relative 'my_exceptions_library'
 require_relative 'hand'
 
 class Player
@@ -21,7 +21,7 @@ class Player
   end
 
   def make_a_bet(value)
-    raise PlayerDoesntHaveMoney unless value <= @bank_account
+    raise MyExceptionsLibrary::PlayerNoMoneyError unless value <= @bank_account
 
     @bank_account -= value
   end

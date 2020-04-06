@@ -9,7 +9,7 @@ class Dealer < Player
   end
 
   def make_a_bet(value)
-    raise DealerDoesntHaveMoney unless value <= @bank_account
+    raise MyExceptionsLibrary::DealerNoMoneyError unless value <= @bank_account
 
     @bank_account -= value
   end

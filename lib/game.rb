@@ -30,7 +30,7 @@ class Game
         players_bets
         start_game_set
         break unless continue_playing?
-      rescue PlayerDoesntHaveMoney, DealerDoesntHaveMoney => e
+      rescue MyExceptionsLibrary::NoMoneyError => e
         @interface.error?(e)
         break
       end
@@ -142,12 +142,10 @@ class Game
 
   def game_winner
     winner = if @player.bank_account > @dealer.bank_account
-                @player
-              elsif @player.bank_account < @dealer.bank_account
-                @dealer
-              else
-                nil
-              end
+               @player
+             elsif @player.bank_account < @dealer.bank_account
+               @dealer
+             end
     @interface.show_game_winner(winner)
   end
 end

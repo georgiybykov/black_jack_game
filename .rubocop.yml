@@ -9,6 +9,9 @@ AllCops:
 Style/FrozenStringLiteralComment:
   Enabled: true
 
+Style/RedundantFreeze:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 

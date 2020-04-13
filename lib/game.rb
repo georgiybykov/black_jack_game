@@ -41,6 +41,8 @@ class Game
   private
 
   def start_game_set
+    @instance_counter = 0
+
     first_deal_of_cards
     @interface.show_game_bank(@game_bank)
 
@@ -83,17 +85,23 @@ class Game
       action = @interface.player_step_menu
       case action
       when ACTIONS[:skip_step]
-        return ACTIONS[:open_cards] if @player.cards_count == 3
+        @instance_counter += 1
 
-        @interface.show_game_info(@player, @dealer, :hidden)
-        dealer_step
+        if @player.cards_count == 3 || @instance_counter == 3
+          @interface.show_game_info(@player, @dealer, :open)
+        else
+          @interface.show_game_info(@player, @dealer, :hidden)
+          dealer_step
+        end
         break
       when ACTIONS[:add_card]
-        return ACTIONS[:open_cards] unless @player.cards_count < 3
-
-        @player.hand.add_card(@deck.take_a_card)
-        @interface.show_game_info(@player, @dealer, :hidden)
-        dealer_step
+        if @player.cards_count == 3
+          @interface.show_game_info(@player, @dealer, :open)
+        else
+          @player.hand.add_card(@deck.take_a_card)
+          @interface.show_game_info(@player, @dealer, :hidden)
+          dealer_step
+        end
         break
       when ACTIONS[:open_cards]
         @interface.show_game_info(@player, @dealer, :open)
@@ -105,7 +113,7 @@ class Game
   end
 
   def dealer_step
-    if @dealer.points >= 17
+    if @dealer.points >= 17 || @dealer.cards_count == 3
       player_step
     elsif @dealer.points < 17 && @dealer.cards_count < 3
       @dealer.draw_card(@deck.take_a_card)
